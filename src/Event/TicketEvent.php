@@ -3,6 +3,7 @@
 namespace Consolidate\Ticket\Event;
 
 use Consolidate\Ticket\Data\Data;
+use Consolidate\Ticket\Data\Participant;
 
 class TicketEvent {
     protected $created;
@@ -15,7 +16,7 @@ class TicketEvent {
      */
     protected $data;
 
-    public function __construct($worker, Data $data, $created = 0) {
+    public function __construct(Participant $worker, Data $data, $created = 0) {
         $this->worker = $worker;
         $this->data = $data;
         $this->created = $created ? $created : time();
@@ -31,5 +32,9 @@ class TicketEvent {
 
     public function getData() {
         return $this->data;
+    }
+
+    public function __toString() {
+        return (string)$this->getWorker() . " " . $this->getAction() . " " . (string)$this->getData() . " @ " . date("Y-m-d H:i", $this->getCreated());
     }
 }
