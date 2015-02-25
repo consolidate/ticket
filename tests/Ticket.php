@@ -10,12 +10,14 @@ use Consolidate\Ticket\Ticket;
 use Consolidate\Ticket\Data\Tag;
 use Consolidate\Ticket\Data\Participant;
 use Consolidate\Ticket\Data\Role;
+use Consolidate\Ticket\Data\Comment;
 
 use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddTag;
 use Consolidate\Ticket\Event\RemoveTag;
 use Consolidate\Ticket\Event\AddRole;
 use Consolidate\Ticket\Event\RemoveRole;
+use Consolidate\Ticket\Event\AddComment;
 
 class TicketTest extends PHPUnit_Framework_TestCase
 {
@@ -34,11 +36,14 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $ticket->addEvent($event);
 
         $participant2 = new Participant('mike@mike.com');
-        $event = new AddRole($participant, new Role($participant2, Role::OBSERVER), $time + 1);
+        $event = new AddRole($participant, new Role($participant2, Role::OBSERVER), $time + 60);
         $ticket->addEvent($event);
 
-        $event = new RemoveRole($participant, new Role($participant2, Role::OBSERVER), $time + 3);
+        $event = new RemoveRole($participant, new Role($participant2, Role::OBSERVER), $time + 120);
         $ticket->addEvent($event);
+
+        $comment = new AddComment($participant, new Comment('Long comment'), $time + 180);
+        $ticket->addEvent($comment);
 
         return $ticket;
     }
@@ -49,7 +54,7 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $ticket->getTags());
 
         $timeline = $ticket->getTimeline();
-        $this->assertCount(5, $timeline);
+        $this->assertCount(6, $timeline);
         $this->assertEquals('Moo2', $timeline[0]->getTag());
         $this->assertEquals('Moo2', $timeline[1]->getTag());
         $this->assertEquals('Moo', $timeline[2]->getTag());
@@ -67,7 +72,24 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $roles);
         $this->assertNotEmpty($roles['worker']);
         $this->assertEquals("bob@bob.com", (string)$worker1);
+    }
 
+    public function testGetAssignedUnknown() {
+        $this->setExpectedException('Exception', 'Ticket currently does not have an assigned worker');
+
+        $ticket = new Ticket();
+        $ticket->getAssignedTo();
+    }
+
+    public function testGetAssigned() {
+        $ticket = new Ticket();
+        $worker = new Participant('system');
+
+        $ticket->assign($worker, new Participant('mike@mike.com'));
+        $this->assertEquals('mike@mike.com', $ticket->getAssignedTo());
+
+        $ticket->assign($worker, new Participant('bob@bob.com'));
+        $this->assertEquals('bob@bob.com', $ticket->getAssignedTo());
     }
 
     public function testTimeline() {
@@ -77,7 +99,8 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bob@bob.com added tag Moo2 @ 2015-02-23 21:09', (string)$timeline[0]);
         $this->assertEquals('bob@bob.com removed tag Moo2 @ 2015-02-23 21:10', (string)$timeline[1]);
         $this->assertEquals('bob@bob.com added tag Moo @ 2015-02-23 21:11', (string)$timeline[2]);
-        $this->assertEquals('bob@bob.com added role observer on mike@mike.com @ 2015-02-23 21:11', (string)$timeline[3]);
-        $this->assertEquals('bob@bob.com removed role observer on mike@mike.com @ 2015-02-23 21:11', (string)$timeline[4]);
+        $this->assertEquals('bob@bob.com added role observer on mike@mike.com @ 2015-02-23 21:12', (string)$timeline[3]);
+        $this->assertEquals('bob@bob.com removed role observer on mike@mike.com @ 2015-02-23 21:13', (string)$timeline[4]);
+        $this->assertEquals('bob@bob.com added comment Long comment @ 2015-02-23 21:14', (string)$timeline[5]);
     }
 }

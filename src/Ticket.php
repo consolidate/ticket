@@ -6,8 +6,10 @@ use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddRole;
 use Consolidate\Ticket\Event\RemoveRole;
 use Consolidate\Ticket\Data\Role;
+use Consolidate\Ticket\Data\Participant;
 
 use Illuminate\Support\Collection;
+use \Exception;
 
 class Ticket {
     /**
@@ -16,11 +18,6 @@ class Ticket {
      */
     protected $timeline;
 
-    /**
-     * The roles of the participants engaged with this ticket
-     * @var [type]
-     */
-    protected $role;
 
     public function __construct() {
         $this->timeline = new Collection();
@@ -38,24 +35,38 @@ class Ticket {
         }, []));
     }
 
-    public function assign(Participant $worker) {
+    public function assign(Participant $worker, Participant $owner) {
         // First we must unassign anyone who this ticket is currently assigned to
         $roles = $this->getRoles();
 
         if (!empty($roles[Role::ASSIGNED])) {
             foreach ($roles[Role::ASSIGNED] as $participant) {
-                $this->addEvent(new RemoveRole(Role::ASSIGNED, $participant));
+                $this->addEvent(new RemoveRole($worker, new Role($participant, Role::ASSIGNED)));
             }
         }
 
-        $this->addEvent(new AddRole(Role::ASSIGNED, $worker));
+        // Add our new assigned person
+        $this->addEvent(new AddRole($worker, new Role($owner, Role::ASSIGNED)));
     }
 
+    /**
+     * Get the participant who is currently assigned to this ticket
+     * 
+     * @return Participant
+     */
     public function getAssignedTo() {
         $roles = $this->getRoles();
-        return !empty($roles[Role::ASSIGNED]) ? current($roles[Role::ASSIGNED]) : false;
+        if (empty($roles[Role::ASSIGNED])) {
+            throw new Exception('Ticket currently does not have an assigned worker');
+        }
+        return current($roles[Role::ASSIGNED]);
     }
 
+    /**
+     * Returns a list of roles on this ticket
+     * 
+     * @return array key/value list of roles/participants
+     */
     public function getRoles() {
         return $this->timeline->reduce(function($role, $event) {
             $role[Role::WORKER][(string)$event->getWorker()] = $event->getWorker();
