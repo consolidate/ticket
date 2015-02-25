@@ -74,7 +74,6 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $ticket = $this->_buildTicket();
 
         $timeline = $ticket->getTimeline();
-        print_r($timeline);
         $this->assertEquals('bob@bob.com added tag Moo2 @ 2015-02-23 21:09', (string)$timeline[0]);
         $this->assertEquals('bob@bob.com removed tag Moo2 @ 2015-02-23 21:10', (string)$timeline[1]);
         $this->assertEquals('bob@bob.com added tag Moo @ 2015-02-23 21:11', (string)$timeline[2]);

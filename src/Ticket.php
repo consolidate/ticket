@@ -3,6 +3,8 @@
 namespace Consolidate\Ticket;
 
 use Consolidate\Ticket\Event\TicketEvent;
+use Consolidate\Ticket\Event\AddRole;
+use Consolidate\Ticket\Event\RemoveRole;
 use Consolidate\Ticket\Data\Role;
 
 use Illuminate\Support\Collection;
@@ -34,6 +36,24 @@ class Ticket {
             $participants[] = $event->getWorker();
             return $participants;
         }, []));
+    }
+
+    public function assign(Participant $worker) {
+        // First we must unassign anyone who this ticket is currently assigned to
+        $roles = $this->getRoles();
+
+        if (!empty($roles[Role::ASSIGNED])) {
+            foreach ($roles[Role::ASSIGNED] as $participant) {
+                $this->addEvent(new RemoveRole(Role::ASSIGNED, $participant));
+            }
+        }
+
+        $this->addEvent(new AddRole(Role::ASSIGNED, $worker));
+    }
+
+    public function getAssignedTo() {
+        $roles = $this->getRoles();
+        return !empty($roles[Role::ASSIGNED]) ? current($roles[Role::ASSIGNED]) : false;
     }
 
     public function getRoles() {

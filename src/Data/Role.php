@@ -4,8 +4,24 @@ namespace Consolidate\Ticket\Data;
 
 class Role implements Data {
 
+    /**
+     * Worker designates that a Participant has worked on a ticket
+     */
     const WORKER = 'worker';
+
+    /**
+     * Assigned indicates who at a particular time point had this item assigned to them
+     */
+    const ASSIGNED = 'assigned';
+
+    /**
+     * Observer indicates who wants to know about updates to this ticket
+     */
     const OBSERVER = 'observer';
+
+    /**
+     * Creator indicates the original creator of this ticket
+     */
     const CREATOR = 'creator';
 
     protected $role;
