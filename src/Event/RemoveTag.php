@@ -4,7 +4,7 @@ namespace Consolidate\Ticket\Event;
 
 use Consolidate\Ticket\Data\Data;
 
-class RemoveTagEvent extends TicketEvent {
+class RemoveTag extends TicketEvent {
     public function getTag() {
         return (string)$this->getData();
     }

@@ -3,6 +3,7 @@
 namespace Consolidate\Ticket;
 
 use Consolidate\Ticket\Event\TicketEvent;
+use Consolidate\Ticket\Data\Role;
 
 use Illuminate\Support\Collection;
 
@@ -29,9 +30,32 @@ class Ticket {
     }
 
     public function getParticipants() {
-        return array_unique($this->timeline->filter(function($event) {
-            return $Event->getWorker();
-        }));
+        return array_unique($this->timeline->reduce(function($participants, $event) {
+            $participants[] = $event->getWorker();
+            return $participants;
+        }, []));
+    }
+
+    public function getRoles() {
+        return $this->timeline->reduce(function($role, $event) {
+            $role[Role::WORKER][(string)$event->getWorker()] = $event->getWorker();
+            if (get_class($event->getData()) == 'Consolidate\Ticket\Data\Role') {
+                $data = $event->getData();
+
+                switch (get_class($event)) {
+                    case 'Consolidate\Ticket\Event\AddRole':
+                        $role[$data->getRole()][(string)$data->getParticipant()] = $data->getParticipant();
+                        break;
+                    case 'Consolidate\Ticket\Event\RemoveRole':
+                        unset($role[$data->getRole()][(string)$data->getParticipant()]);
+                        if (empty($role[$data->getRole()])) {
+                            unset($role[$data->getRole()]);
+                        }
+                        break;
+                }
+            }
+            return $role;
+        }, []);
     }
 
     /**
@@ -45,10 +69,10 @@ class Ticket {
         return $this->getTimeline()->reduce(function($result, $event) {
             if (get_class($event->getData()) == 'Consolidate\Ticket\Data\Tag') {
                 switch (get_class($event)) {
-                    case 'Consolidate\Ticket\Event\AddTagEvent':
+                    case 'Consolidate\Ticket\Event\AddTag':
                         $result[$event->getTag()] = $event->getTag();
                         break;
-                    case 'Consolidate\Ticket\Event\RemoveTagEvent':
+                    case 'Consolidate\Ticket\Event\RemoveTag':
                         unset($result[$event->getTag()]);
                         break;
                 }

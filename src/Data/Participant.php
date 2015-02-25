@@ -2,20 +2,46 @@
 
 namespace Consolidate\Ticket\Data;
 
+/**
+ * Glorified parameterbag
+ *
+ * @todo Extract parameterbag stuff
+ */
 class Participant implements Data {
     use Resolvable;
 
-    protected $key;
+    protected $label;
+    protected $param = array();
 
-    public function __construct($key) {
-        $this->key = $key;
+    public function __construct($label) {
+        $this->setLabel($label);
     }
 
-    public function getKey() {
-        return $this->key;
+    public function setLabel($label) {
+        $this->label = $label;
+    }
+
+    public function getLabel() {
+        return $this->label;
+    }
+
+    public function set($key, $value) {
+        $this->param[$key] = $value;
+    }
+
+    public function get($key) {
+        return $this->param[$key];
+    }
+
+    public function fromArray(array $values) {
+        $this->param = $values;
+    }
+
+    public function toArray() {
+        return $this->param;
     }
 
     public function __toString() {
-        return $this->key;
+        return $this->label;
     }
 }
