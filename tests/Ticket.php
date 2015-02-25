@@ -4,7 +4,6 @@ namespace Consolidate\Ticket\Tests;
 
 use \PHPUnit_Framework_TestCase as PHPUnit_Framework_TestCase;
 
-
 use Consolidate\Ticket\Ticket;
 
 use Consolidate\Ticket\Data\Tag;
@@ -85,10 +84,11 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $ticket = new Ticket();
         $worker = new Participant('system');
 
-        $ticket->assign($worker, new Participant('mike@mike.com'));
+        $ticket->setWorker($worker);
+        $ticket->assign(new Participant('mike@mike.com'));
         $this->assertEquals('mike@mike.com', $ticket->getAssignedTo());
 
-        $ticket->assign($worker, new Participant('bob@bob.com'));
+        $ticket->assign(new Participant('bob@bob.com'));
         $this->assertEquals('bob@bob.com', $ticket->getAssignedTo());
     }
 

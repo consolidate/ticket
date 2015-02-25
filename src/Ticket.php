@@ -18,10 +18,10 @@ class Ticket {
      */
     protected $timeline;
 
+    protected $worker;
 
     public function __construct() {
         $this->timeline = new Collection();
-        $this->role = [];
     }
 
     public function addEvent(TicketEvent $event) {
@@ -35,18 +35,33 @@ class Ticket {
         }, []));
     }
 
-    public function assign(Participant $worker, Participant $owner) {
+    /**
+     * Set the person who is currently modifying this ticket (not the same as 
+     * who the ticket assigned to). The worker is the Participant who is
+     * modifying the ticket at this moment (adding an email, comment, etc)
+     * 
+     * @param Participant $worker
+     */
+    public function setWorker(Participant $worker) {
+        $this->worker = $worker;
+    }
+
+    public function getWorker() {
+        return $this->worker;
+    }
+
+    public function assign(Participant $owner) {
         // First we must unassign anyone who this ticket is currently assigned to
         $roles = $this->getRoles();
 
         if (!empty($roles[Role::ASSIGNED])) {
             foreach ($roles[Role::ASSIGNED] as $participant) {
-                $this->addEvent(new RemoveRole($worker, new Role($participant, Role::ASSIGNED)));
+                $this->addEvent(new RemoveRole($this->getWorker(), new Role($participant, Role::ASSIGNED)));
             }
         }
 
         // Add our new assigned person
-        $this->addEvent(new AddRole($worker, new Role($owner, Role::ASSIGNED)));
+        $this->addEvent(new AddRole($this->getWorker(), new Role($owner, Role::ASSIGNED)));
     }
 
     /**
