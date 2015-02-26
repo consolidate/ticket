@@ -5,7 +5,9 @@ namespace Consolidate\Ticket\Event;
 use Consolidate\Ticket\Data\Data;
 use Consolidate\Ticket\Data\Participant;
 
-class TicketEvent {
+use Symfony\Component\EventDispatcher\Event;
+
+class TicketEvent extends Event {
     protected $created;
     protected $worker;
 

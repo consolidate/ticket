@@ -2,9 +2,11 @@
 
 namespace Consolidate\Ticket;
 
+use Consolidate\Ticket\Event\EventAware;
 use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddRole;
 use Consolidate\Ticket\Event\RemoveRole;
+
 use Consolidate\Ticket\Data\Role;
 use Consolidate\Ticket\Data\Participant;
 
@@ -12,6 +14,8 @@ use Illuminate\Support\Collection;
 use \Exception;
 
 class Ticket {
+    use EventAware;
+
     /**
      * All the events that have happened to this ticket
      * @var Collection
@@ -26,6 +30,7 @@ class Ticket {
 
     public function addEvent(TicketEvent $event) {
         $this->timeline->push($event);
+        $this->getEventManager()->dispatch('ticket-add-event', $event);
     }
 
     public function getParticipants() {
