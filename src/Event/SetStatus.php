@@ -4,10 +4,10 @@ namespace Consolidate\Ticket\Event;
 
 use Consolidate\Ticket\Data\Data;
 
-class RemoveRole extends TicketEvent
+class SetStatus extends TicketEvent
 {
     public function getAction()
     {
-        return "removed role";
+        return "set status";
     }
 }

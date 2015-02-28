@@ -10,6 +10,7 @@ use Consolidate\Ticket\Data\Tag;
 use Consolidate\Ticket\Data\Participant;
 use Consolidate\Ticket\Data\Role;
 use Consolidate\Ticket\Data\Comment;
+use Consolidate\Ticket\Data\Status;
 
 use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddTag;
@@ -17,6 +18,7 @@ use Consolidate\Ticket\Event\RemoveTag;
 use Consolidate\Ticket\Event\AddRole;
 use Consolidate\Ticket\Event\RemoveRole;
 use Consolidate\Ticket\Event\AddComment;
+use Consolidate\Ticket\Event\SetStatus;
 
 class TicketTest extends PHPUnit_Framework_TestCase
 {
@@ -25,6 +27,10 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $participant = new Participant('bob@bob.com');
         
         $time = strtotime('2015-02-23 21:11');
+
+        $status = new SetStatus($participant, new Status(Status::OPEN), $time + 30);
+        $ticket->addEvent($status);
+
         $event = new AddTag($participant, new Tag('Moo'), $time);
         $ticket->addEvent($event);
 
@@ -47,13 +53,32 @@ class TicketTest extends PHPUnit_Framework_TestCase
         return $ticket;
     }
 
+    public function testGetStatus() {
+        $ticket = $this->_buildTicket();
+
+        $this->assertEquals(Status::OPEN, $ticket->getStatus());
+
+        $participant = new Participant('bob@bob.com');
+        $time = strtotime('2015-02-23 21:11');
+        $status = new SetStatus($participant, new Status(Status::CLOSED), $time + 60);
+        $ticket->addEvent($status);
+
+        $this->assertEquals(Status::CLOSED, (string)$ticket->getStatus());
+        // Ensure that, once cached, we get the same result without all the work
+        $this->assertEquals(Status::CLOSED, (string)$ticket->getStatus());
+
+        $ticket->setWorker($participant);
+        $ticket->setStatus(new Status(Status::QUEUED));
+        $this->assertEquals(Status::QUEUED, (string)$ticket->getStatus());
+    }
+
     public function testItemAdding() {
         $ticket = $this->_buildTicket();
 
         $this->assertCount(1, $ticket->getTags());
 
         $timeline = $ticket->getTimeline();
-        $this->assertCount(6, $timeline);
+        $this->assertCount(7, $timeline);
         $this->assertEquals('Moo2', $timeline[0]->getTag());
         $this->assertEquals('Moo2', $timeline[1]->getTag());
         $this->assertEquals('Moo', $timeline[2]->getTag());
@@ -96,11 +121,13 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $ticket = $this->_buildTicket();
 
         $timeline = $ticket->getTimeline();
+        $this->assertSame($ticket, $timeline[0]->getTicket());
         $this->assertEquals('bob@bob.com added tag Moo2 @ 2015-02-23 21:09', (string)$timeline[0]);
         $this->assertEquals('bob@bob.com removed tag Moo2 @ 2015-02-23 21:10', (string)$timeline[1]);
         $this->assertEquals('bob@bob.com added tag Moo @ 2015-02-23 21:11', (string)$timeline[2]);
-        $this->assertEquals('bob@bob.com added role observer on mike@mike.com @ 2015-02-23 21:12', (string)$timeline[3]);
-        $this->assertEquals('bob@bob.com removed role observer on mike@mike.com @ 2015-02-23 21:13', (string)$timeline[4]);
-        $this->assertEquals('bob@bob.com added comment Long comment @ 2015-02-23 21:14', (string)$timeline[5]);
+        $this->assertEquals('bob@bob.com set status open @ 2015-02-23 21:11', (string)$timeline[3]);
+        $this->assertEquals('bob@bob.com added role observer on mike@mike.com @ 2015-02-23 21:12', (string)$timeline[4]);
+        $this->assertEquals('bob@bob.com removed role observer on mike@mike.com @ 2015-02-23 21:13', (string)$timeline[5]);
+        $this->assertEquals('bob@bob.com added comment Long comment @ 2015-02-23 21:14', (string)$timeline[6]);
     }
 }

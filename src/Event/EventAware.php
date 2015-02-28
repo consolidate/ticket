@@ -17,7 +17,8 @@ trait EventAware
      *
      * @return EventDispatcherInterface
      */
-    public function getEventManager() {
+    public function getEventManager()
+    {
         // If we haven't set an event manager, use a dummy for now
         if (empty($this->eventManager)) {
             $this->setEventManager(new Dummy());
@@ -30,7 +31,8 @@ trait EventAware
      *
      * @return mixed
      */
-    public function setEventManager(EventDispatcherInterface $eventManager) {
+    public function setEventManager(EventDispatcherInterface $eventManager)
+    {
         $this->eventManager = $eventManager;
         return $this;
     }

@@ -6,14 +6,17 @@ use Consolidate\Ticket\Event\EventAware;
 use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddRole;
 use Consolidate\Ticket\Event\RemoveRole;
+use Consolidate\Ticket\Event\SetStatus;
 
 use Consolidate\Ticket\Data\Role;
 use Consolidate\Ticket\Data\Participant;
+use Consolidate\Ticket\Data\Status;
 
 use Illuminate\Support\Collection;
 use \Exception;
 
-class Ticket {
+class Ticket
+{
     use EventAware;
 
     /**
@@ -24,16 +27,52 @@ class Ticket {
 
     protected $worker;
 
-    public function __construct() {
+    protected $status = null;
+
+    public function __construct()
+    {
         $this->timeline = new Collection();
     }
 
-    public function addEvent(TicketEvent $event) {
-        $this->timeline->push($event);
-        $this->getEventManager()->dispatch('ticket-add-event', $event);
+    public function setDirty()
+    {
+        $this->status = null;
     }
 
-    public function getParticipants() {
+    public function addEvent(TicketEvent $event)
+    {
+        $this->timeline->push($event);
+
+        // Set up some circle-referencing
+        $event->setTicket($this);
+        $event_name = 'ticket-' . str_replace(' ', '-', $event->getAction());
+        $this->getEventManager()->dispatch($event_name, $event);
+        $this->getEventManager()->dispatch('ticket-add-event', $event);
+
+        $this->setDirty();
+    }
+
+    public function setStatus(Status $status)
+    {
+        $this->addEvent(new SetStatus($this->getWorker(), $status));
+    }
+
+    public function getStatus()
+    {
+        if (!$this->status) {
+            $this->status = $this->getTimeline()->reduce(function($status, $event) {
+                if (get_class($event) == 'Consolidate\Ticket\Event\SetStatus') {
+                    $status = $event->getData();
+                }
+                return $status;
+            }, null);
+        }
+
+        return $this->status;
+    }
+
+    public function getParticipants()
+    {
         return array_unique($this->timeline->reduce(function($participants, $event) {
             $participants[] = $event->getWorker();
             return $participants;
@@ -41,21 +80,24 @@ class Ticket {
     }
 
     /**
-     * Set the person who is currently modifying this ticket (not the same as 
+     * Set the person who is currently modifying this ticket (not the same as
      * who the ticket assigned to). The worker is the Participant who is
      * modifying the ticket at this moment (adding an email, comment, etc)
-     * 
+     *
      * @param Participant $worker
      */
-    public function setWorker(Participant $worker) {
+    public function setWorker(Participant $worker)
+    {
         $this->worker = $worker;
     }
 
-    public function getWorker() {
+    public function getWorker()
+    {
         return $this->worker;
     }
 
-    public function assign(Participant $owner) {
+    public function assign(Participant $owner)
+    {
         // First we must unassign anyone who this ticket is currently assigned to
         $roles = $this->getRoles();
 
@@ -71,10 +113,11 @@ class Ticket {
 
     /**
      * Get the participant who is currently assigned to this ticket
-     * 
+     *
      * @return Participant
      */
-    public function getAssignedTo() {
+    public function getAssignedTo()
+    {
         $roles = $this->getRoles();
         if (empty($roles[Role::ASSIGNED])) {
             throw new Exception('Ticket currently does not have an assigned worker');
@@ -84,26 +127,24 @@ class Ticket {
 
     /**
      * Returns a list of roles on this ticket
-     * 
+     *
      * @return array key/value list of roles/participants
      */
-    public function getRoles() {
-        return $this->timeline->reduce(function($role, $event) {
+    public function getRoles()
+    {
+        return $this->getTimeline()->reduce(function($role, $event) {
             $role[Role::WORKER][(string)$event->getWorker()] = $event->getWorker();
-            if (get_class($event->getData()) == 'Consolidate\Ticket\Data\Role') {
-                $data = $event->getData();
-
-                switch (get_class($event)) {
-                    case 'Consolidate\Ticket\Event\AddRole':
-                        $role[$data->getRole()][(string)$data->getParticipant()] = $data->getParticipant();
-                        break;
-                    case 'Consolidate\Ticket\Event\RemoveRole':
-                        unset($role[$data->getRole()][(string)$data->getParticipant()]);
-                        if (empty($role[$data->getRole()])) {
-                            unset($role[$data->getRole()]);
-                        }
-                        break;
-                }
+            $data = $event->getData();
+            switch (get_class($event)) {
+                case 'Consolidate\Ticket\Event\AddRole':
+                    $role[$data->getRole()][(string)$data->getParticipant()] = $data->getParticipant();
+                    break;
+                case 'Consolidate\Ticket\Event\RemoveRole':
+                    unset($role[$data->getRole()][(string)$data->getParticipant()]);
+                    if (empty($role[$data->getRole()])) {
+                        unset($role[$data->getRole()]);
+                    }
+                    break;
             }
             return $role;
         }, []);
@@ -113,10 +154,11 @@ class Ticket {
      * Play through the timeline and return which tags are currently applied,
      * taking into account those that have been added and those that have been
      * removed.
-     * 
+     *
      * @return array List of tags on the ticket
      */
-    public function getTags() {
+    public function getTags()
+    {
         return $this->getTimeline()->reduce(function($result, $event) {
             if (get_class($event->getData()) == 'Consolidate\Ticket\Data\Tag') {
                 switch (get_class($event)) {
@@ -134,10 +176,11 @@ class Ticket {
 
     /**
      * Return a time ordered list of items attached to a ticket
-     * 
+     *
      * @return Collection
      */
-    public function getTimeline() {
+    public function getTimeline()
+    {
         return $this->timeline->sortBy(function($event) {
             return $event->getCreated();
         })->values();

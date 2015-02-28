@@ -2,8 +2,8 @@
 
 namespace Consolidate\Ticket\Data;
 
-class Role implements Data {
-
+class Role implements Data
+{
     /**
      * Worker designates that a Participant has worked on a ticket
      */
@@ -27,20 +27,24 @@ class Role implements Data {
     protected $role;
     protected $participant;
 
-    public function __construct(Participant $participant, $role) {
+    public function __construct(Participant $participant, $role)
+    {
         $this->participant = $participant;
         $this->role = $role;
     }
 
-    public function getRole() {
+    public function getRole()
+    {
         return $this->role;
     }
 
-    public function getParticipant() {
+    public function getParticipant()
+    {
         return $this->participant;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return (string)$this->getRole() . " on " . (string)$this->getParticipant();
     }
 }
