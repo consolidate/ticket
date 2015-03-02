@@ -117,6 +117,25 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bob@bob.com', $ticket->getAssignedTo());
     }
 
+    public function testGetEvents() {
+        $ticket = $this->_buildTicket();
+
+        $timeline = $ticket->getEvents(['Consolidate\Ticket\Event\AddTag']);
+        $this->assertCount(2, $timeline);
+        $this->assertEquals('bob@bob.com added tag Moo2 @ 2015-02-23 21:09', (string)$timeline[0]);
+        $this->assertEquals('bob@bob.com added tag Moo @ 2015-02-23 21:11', (string)$timeline[1]);
+    }
+
+    public function testGetData() {
+        $ticket = $this->_buildTicket();
+
+        $timeline = $ticket->getData(['Consolidate\Ticket\Data\Tag']);
+        $this->assertCount(3, $timeline);
+        $this->assertEquals('bob@bob.com added tag Moo2 @ 2015-02-23 21:09', (string)$timeline[0]);
+        $this->assertEquals('bob@bob.com removed tag Moo2 @ 2015-02-23 21:10', (string)$timeline[1]);
+        $this->assertEquals('bob@bob.com added tag Moo @ 2015-02-23 21:11', (string)$timeline[2]);
+    }
+
     public function testTimeline() {
         $ticket = $this->_buildTicket();
 

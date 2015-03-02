@@ -21,20 +21,43 @@ class Ticket
 
     /**
      * All the events that have happened to this ticket
+     *
      * @var Collection
      */
     protected $timeline;
 
+    /**
+     * Who is working on this ticket in this script instance.
+     * NOT the same thing as "who is this ticket assigned to"
+     *
+     * @var Consolidate\Ticket\Data\Participant
+     */
     protected $worker;
 
+    /**
+     * To reduce the cost of constantly walking the timeline, this variable
+     * stores the results from various functions until a new event enters the
+     * timeline (and the cache becomes dirty)
+     *
+     * @var array
+     */
     protected $cached;
 
     public function __construct()
     {
         $this->timeline = new Collection();
+        $this->setDirty();
     }
 
-    public function getWithCaching($key, $callback)
+    /**
+     * Wrapper function around the caching system. If the cached entry is not
+     * available, the callback is called to populate the cache
+     *
+     * @param  string   $key      The name of the cache key
+     * @param  callable $callback The callback to execute to populate the cache
+     * @return mixed
+     */
+    public function getWithCaching($key, callable $callback)
     {
         if (empty($this->cached[$key])) {
             $this->cached[$key] = $callback();
@@ -43,11 +66,19 @@ class Ticket
         return $this->cached[$key];
     }
 
+    /**
+     * Mark the cache as dirty
+     */
     public function setDirty()
     {
         $this->cached = [];
     }
 
+    /**
+     * Insert a new event into the timeline. This should make our cache dirty.
+     *
+     * @param TicketEvent $event The new event for our timeline
+     */
     public function addEvent(TicketEvent $event)
     {
         $this->timeline->push($event);
@@ -61,11 +92,22 @@ class Ticket
         $this->setDirty();
     }
 
+    /**
+     * Change the status of the ticket as of now
+     *
+     * @param Status $status The new status
+     */
     public function setStatus(Status $status)
     {
         $this->addEvent(new SetStatus($this->getWorker(), $status));
     }
 
+    /**
+     * Return the status of the ticket by picking the latest status change from
+     * the timeline.
+     *
+     * @return Status
+     */
     public function getStatus()
     {
         return $this->getWithCaching('status', function() {
@@ -78,6 +120,12 @@ class Ticket
         });
     }
 
+    /**
+     * Get all the participants who have contributed to this ticket by
+     * examining each event in the timeline for the person who created it.
+     *
+     * @return Collection
+     */
     public function getParticipants()
     {
         return $this->getWithCaching('participants', function() {
@@ -100,11 +148,21 @@ class Ticket
         $this->worker = $worker;
     }
 
+    /**
+     * Return the current modifier of this ticket for this instance
+     *
+     * @return Participant
+     */
     public function getWorker()
     {
         return $this->worker;
     }
 
+    /**
+     * Assign this ticket to a particular participant
+     *
+     * @param  Participant $owner Who to assign this ticket to
+     */
     public function assign(Participant $owner)
     {
         // First we must unassign anyone who this ticket is currently assigned to
@@ -197,17 +255,29 @@ class Ticket
         })->values();
     }
 
+    /**
+     * Return a timeline of specific events
+     *
+     * @param  array  $eventTypes What event types to return
+     * @return Collection
+     */
     public function getEvents(array $eventTypes)
     {
         return $this->getTimeline()->filter(function($event) use ($eventTypes) {
             return in_array(get_class($event), $eventTypes);
-        });
+        })->values();
     }
 
+    /**
+     * Return a timeline of specific data types
+     *
+     * @param  array  $dataTypes What data types should events contain
+     * @return Collection
+     */
     public function getData(array $dataTypes)
     {
         return $this->getTimeline()->filter(function($event) use ($dataTypes) {
             return in_array(get_class($event->getData()), $dataTypes);
-        });
+        })->values();
     }
 }
