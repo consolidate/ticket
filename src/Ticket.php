@@ -27,16 +27,25 @@ class Ticket
 
     protected $worker;
 
-    protected $status = null;
+    protected $cached;
 
     public function __construct()
     {
         $this->timeline = new Collection();
     }
 
+    public function getWithCaching($key, $callback)
+    {
+        if (empty($this->cached[$key])) {
+            $this->cached[$key] = $callback();
+        }
+
+        return $this->cached[$key];
+    }
+
     public function setDirty()
     {
-        $this->status = null;
+        $this->cached = [];
     }
 
     public function addEvent(TicketEvent $event)
@@ -59,24 +68,24 @@ class Ticket
 
     public function getStatus()
     {
-        if (!$this->status) {
-            $this->status = $this->getTimeline()->reduce(function($status, $event) {
+        return $this->getWithCaching('status', function() {
+            return $this->getTimeline()->reduce(function($status, $event) {
                 if (get_class($event) == 'Consolidate\Ticket\Event\SetStatus') {
                     $status = $event->getData();
                 }
                 return $status;
             }, null);
-        }
-
-        return $this->status;
+        });
     }
 
     public function getParticipants()
     {
-        return array_unique($this->timeline->reduce(function($participants, $event) {
-            $participants[] = $event->getWorker();
-            return $participants;
-        }, []));
+        return $this->getWithCaching('participants', function() {
+            return array_unique($this->timeline->reduce(function($participants, $event) {
+                $participants[] = $event->getWorker();
+                return $participants;
+            }, []));
+        });
     }
 
     /**
@@ -132,22 +141,24 @@ class Ticket
      */
     public function getRoles()
     {
-        return $this->getTimeline()->reduce(function($role, $event) {
-            $role[Role::WORKER][(string)$event->getWorker()] = $event->getWorker();
-            $data = $event->getData();
-            switch (get_class($event)) {
-                case 'Consolidate\Ticket\Event\AddRole':
-                    $role[$data->getRole()][(string)$data->getParticipant()] = $data->getParticipant();
-                    break;
-                case 'Consolidate\Ticket\Event\RemoveRole':
-                    unset($role[$data->getRole()][(string)$data->getParticipant()]);
-                    if (empty($role[$data->getRole()])) {
-                        unset($role[$data->getRole()]);
-                    }
-                    break;
-            }
-            return $role;
-        }, []);
+        return $this->getWithCaching('roles', function() {
+            return $this->getTimeline()->reduce(function($role, $event) {
+                $role[Role::WORKER][(string)$event->getWorker()] = $event->getWorker();
+                $data = $event->getData();
+                switch (get_class($event)) {
+                    case 'Consolidate\Ticket\Event\AddRole':
+                        $role[$data->getRole()][(string)$data->getParticipant()] = $data->getParticipant();
+                        break;
+                    case 'Consolidate\Ticket\Event\RemoveRole':
+                        unset($role[$data->getRole()][(string)$data->getParticipant()]);
+                        if (empty($role[$data->getRole()])) {
+                            unset($role[$data->getRole()]);
+                        }
+                        break;
+                }
+                return $role;
+            }, []);
+        });
     }
 
     /**
@@ -159,8 +170,8 @@ class Ticket
      */
     public function getTags()
     {
-        return $this->getTimeline()->reduce(function($result, $event) {
-            if (get_class($event->getData()) == 'Consolidate\Ticket\Data\Tag') {
+        return $this->getWithCaching('tags', function() {
+            return $this->getData(['Consolidate\Ticket\Data\Tag'])->reduce(function($result, $event) {
                 switch (get_class($event)) {
                     case 'Consolidate\Ticket\Event\AddTag':
                         $result[$event->getTag()] = $event->getTag();
@@ -169,8 +180,8 @@ class Ticket
                         unset($result[$event->getTag()]);
                         break;
                 }
-            }
-            return $result;
+                return $result;
+            });
         });
     }
 
@@ -184,5 +195,19 @@ class Ticket
         return $this->timeline->sortBy(function($event) {
             return $event->getCreated();
         })->values();
+    }
+
+    public function getEvents(array $eventTypes)
+    {
+        return $this->getTimeline()->filter(function($event) use ($eventTypes) {
+            return in_array(get_class($event), $eventTypes);
+        });
+    }
+
+    public function getData(array $dataTypes)
+    {
+        return $this->getTimeline()->filter(function($event) use ($dataTypes) {
+            return in_array(get_class($event->getData()), $dataTypes);
+        });
     }
 }
