@@ -8,7 +8,7 @@ use Consolidate\Ticket\Data\Participant;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class TicketEvent extends Event
+abstract class TicketEvent extends Event
 {
     protected $created;
     protected $worker;
@@ -52,6 +52,18 @@ class TicketEvent extends Event
     {
         return $this->ticket;
     }
+
+    public function toArray()
+    {
+        return [
+            'event' => $this->getAction(),
+            'data' => $this->getData()->toArray(),
+            'worker' => $this->getWorker()->toArray(),
+            'created' => $this->getCreated()
+        ];
+    }
+
+    public abstract function getAction();
 
     public function __toString()
     {

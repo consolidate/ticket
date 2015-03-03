@@ -7,5 +7,6 @@ namespace Consolidate\Ticket\Data;
  */
 interface Data
 {
+    public function toArray();
     public function __toString();
 }

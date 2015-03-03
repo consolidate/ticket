@@ -11,6 +11,13 @@ class Tag implements Data
         $this->tag = $tag;
     }
 
+    public function toArray()
+    {
+        return [
+            'tag' => $this->tag
+        ];
+    }
+
     public function __toString()
     {
         return $this->tag;

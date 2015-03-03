@@ -11,14 +11,15 @@ class ParticipantTest extends PHPUnit_Framework_TestCase
     public function testAccessors() {
         $participant = new Participant('bob@bob.com');
 
-        $this->assertCount(0, $participant->toArray());
+        $this->assertCount(1, $participant->toArray());
+        $this->assertEquals('bob@bob.com', $participant->getLabel());
 
         $participant->fromArray([
             'moo'  => 1,
             'moo2' => 2
         ]);
 
-        $this->assertCount(2, $participant->toArray());
+        $this->assertCount(3, $participant->toArray());
         $this->assertEquals(1, $participant->get('moo'));
     }
 }

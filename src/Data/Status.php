@@ -17,6 +17,13 @@ class Status implements Data
         $this->status = $status;
     }
 
+    public function toArray()
+    {
+        return [
+            'status' => $this->status
+        ];
+    }
+
     public function __toString()
     {
         return $this->status;

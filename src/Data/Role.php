@@ -43,6 +43,14 @@ class Role implements Data
         return $this->participant;
     }
 
+    public function toArray()
+    {
+        return [
+            'role'        => $this->role,
+            'participant' => $this->participant->toArray()
+        ];
+    }
+
     public function __toString()
     {
         return (string)$this->getRole() . " on " . (string)$this->getParticipant();

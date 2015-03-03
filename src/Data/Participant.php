@@ -46,7 +46,7 @@ class Participant implements Data
 
     public function toArray()
     {
-        return $this->param;
+        return $this->param + ['label' => $this->label];
     }
 
     public function __toString()

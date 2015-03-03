@@ -149,4 +149,15 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bob@bob.com removed role observer on mike@mike.com @ 2015-02-23 21:13', (string)$timeline[5]);
         $this->assertEquals('bob@bob.com added comment Long comment @ 2015-02-23 21:14', (string)$timeline[6]);
     }
+
+    public function testGetCreated() {
+        $ticket = $this->_buildTicket();
+        $this->assertEquals(1424722160, $ticket->getCreated());
+    }
+
+    public function testToArray() {
+        $ticket = $this->_buildTicket();
+
+        //print_r($ticket->toArray());
+    }
 }

@@ -19,6 +19,8 @@ class Ticket
 {
     use EventAware;
 
+    protected $id;
+
     /**
      * All the events that have happened to this ticket
      *
@@ -43,10 +45,21 @@ class Ticket
      */
     protected $cached;
 
-    public function __construct()
+    public function __construct($id = 0)
     {
         $this->timeline = new Collection();
         $this->setDirty();
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     /**
@@ -100,6 +113,11 @@ class Ticket
     public function setStatus(Status $status)
     {
         $this->addEvent(new SetStatus($this->getWorker(), $status));
+    }
+
+    public function getCreated()
+    {
+        return $this->getTimeline()->shift()->getCreated();
     }
 
     /**
@@ -279,5 +297,21 @@ class Ticket
         return $this->getTimeline()->filter(function($event) use ($dataTypes) {
             return in_array(get_class($event->getData()), $dataTypes);
         })->values();
+    }
+
+    /**
+     * Provide a lossless cachable/storable array of the configuration of the
+     * ticket and it's timeline
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [
+            'id'       => $this->id,
+            'timeline' => $this->getTimeline()->map(function($event) {
+                return $event->toArray();
+            })->toArray()
+        ];
     }
 }

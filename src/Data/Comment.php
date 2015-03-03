@@ -11,6 +11,13 @@ class Comment implements Data
         $this->comment = $comment;
     }
 
+    public function toArray()
+    {
+        return [
+            'comment' => $this->comment
+        ];
+    }
+
     public function __toString()
     {
         return $this->comment;
