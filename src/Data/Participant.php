@@ -39,14 +39,21 @@ class Participant implements Data
         return $this->param[$key];
     }
 
-    public function fromArray(array $values)
-    {
-        $this->param = $values;
-    }
-
     public function toArray()
     {
         return $this->param + ['label' => $this->label];
+    }
+
+    public static function fromArray(array $data)
+    {
+        $class = new self($data['label']);
+        unset($data['label']);
+        if (!empty($data)) {
+            foreach ($data as $key => $value) {
+                $class->set($key, $value);
+            }
+        }
+        return $class;
     }
 
     public function __toString()

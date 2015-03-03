@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "16064456c25f75b71c4fcb4a68866a54",
+    "hash": "a6bc7fe677b61ec286c561206446ffed",
     "packages": [
         {
             "name": "illuminate/support",
@@ -113,11 +113,12 @@
             "time": "2015-02-01 16:10:57"
         }
     ],
-    "packages-dev": [],
+    "packages-dev": null,
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "illuminate/support": 0
+        "illuminate/support": 0,
+        "phpunit/phpunit": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

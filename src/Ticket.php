@@ -314,4 +314,25 @@ class Ticket
             })->toArray()
         ];
     }
+
+    public static function fromArray(array $data)
+    {
+        $ticket = new Ticket($data['id']);
+        $participants = [];
+
+        foreach ($data['timeline'] as $event) {
+            $class = $event['class'];
+            $data_class = $class::getDataType();
+            $data_object = $data_class::fromArray($event['data']);
+
+            $label = $event['worker']['label'];
+            if (empty($participants[$label])) {
+                $participants[$label] = new Participant($label);
+            };
+
+            $ticket->addEvent(new $class($participants[$label], $data_object, $event['created']));
+        }
+
+        return $ticket;
+    }
 }

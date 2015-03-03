@@ -158,6 +158,7 @@ class TicketTest extends PHPUnit_Framework_TestCase
     public function testToArray() {
         $ticket = $this->_buildTicket();
 
-        //print_r($ticket->toArray());
+        $ticket2 = Ticket::fromArray($ticket->toArray());
+        $this->assertEquals($ticket->toArray(), $ticket2->toArray());
     }
 }

@@ -8,5 +8,6 @@ namespace Consolidate\Ticket\Data;
 interface Data
 {
     public function toArray();
+    public static function fromArray(array $data);
     public function __toString();
 }

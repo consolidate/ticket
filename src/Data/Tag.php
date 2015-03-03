@@ -18,6 +18,11 @@ class Tag implements Data
         ];
     }
 
+    public static function fromArray(array $data)
+    {
+        return new self($data['tag']);
+    }
+
     public function __toString()
     {
         return $this->tag;

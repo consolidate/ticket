@@ -2,6 +2,8 @@
 
 namespace Consolidate\Ticket\Data;
 
+use Consolidate\Ticket\Data\Participant;
+
 class Role implements Data
 {
     /**
@@ -49,6 +51,11 @@ class Role implements Data
             'role'        => $this->role,
             'participant' => $this->participant->toArray()
         ];
+    }
+
+    public static function fromArray(array $data)
+    {
+        return new self(Participant::fromArray($data['participant']), $data['role']);
     }
 
     public function __toString()

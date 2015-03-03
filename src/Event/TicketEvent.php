@@ -56,6 +56,7 @@ abstract class TicketEvent extends Event
     public function toArray()
     {
         return [
+            'class' => get_class($this),
             'event' => $this->getAction(),
             'data' => $this->getData()->toArray(),
             'worker' => $this->getWorker()->toArray(),
@@ -64,6 +65,10 @@ abstract class TicketEvent extends Event
     }
 
     public abstract function getAction();
+    public static function getDataType()
+    {
+        return 'Consolidate\Ticket\Data\Data';
+    }
 
     public function __toString()
     {

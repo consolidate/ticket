@@ -11,6 +11,11 @@ class RemoveTag extends TicketEvent
         return (string)$this->getData();
     }
 
+    public static function getDataType()
+    {
+        return 'Consolidate\Ticket\Data\Tag';
+    }
+
     public function getAction()
     {
         return "removed tag";

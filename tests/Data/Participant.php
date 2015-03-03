@@ -14,7 +14,8 @@ class ParticipantTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $participant->toArray());
         $this->assertEquals('bob@bob.com', $participant->getLabel());
 
-        $participant->fromArray([
+        $participant = Participant::fromArray([
+            'label' => 'bob@bob.com',
             'moo'  => 1,
             'moo2' => 2
         ]);

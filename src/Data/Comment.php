@@ -18,6 +18,11 @@ class Comment implements Data
         ];
     }
 
+    public static function fromArray(array $data)
+    {
+        return new self($data['comment']);
+    }
+
     public function __toString()
     {
         return $this->comment;

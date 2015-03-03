@@ -24,6 +24,11 @@ class Status implements Data
         ];
     }
 
+    public static function fromArray(array $data)
+    {
+        return new self($data['status']);
+    }
+
     public function __toString()
     {
         return $this->status;
