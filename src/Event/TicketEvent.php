@@ -64,7 +64,20 @@ abstract class TicketEvent extends Event
         ];
     }
 
+    public static function fromArray(array $event)
+    {
+        $class = $event['class'];
+        $data = $class::getDataType();
+
+        return new $class(
+            new Participant($event['worker']['label']),
+            $data::fromArray($event['data']),
+            $event['created']
+        );
+    }
+
     public abstract function getAction();
+
     public static function getDataType()
     {
         return 'Consolidate\Ticket\Data\Data';

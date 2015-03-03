@@ -321,16 +321,7 @@ class Ticket
         $participants = [];
 
         foreach ($data['timeline'] as $event) {
-            $class = $event['class'];
-            $data_class = $class::getDataType();
-            $data_object = $data_class::fromArray($event['data']);
-
-            $label = $event['worker']['label'];
-            if (empty($participants[$label])) {
-                $participants[$label] = new Participant($label);
-            };
-
-            $ticket->addEvent(new $class($participants[$label], $data_object, $event['created']));
+            $ticket->addEvent(TicketEvent::fromArray($event));
         }
 
         return $ticket;
