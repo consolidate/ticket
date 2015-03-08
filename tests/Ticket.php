@@ -155,6 +155,13 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(1424722160, $ticket->getCreated());
     }
 
+    public function testIdAccessors() {
+        $ticket = $this->_buildTicket();
+        $this->assertEquals(0, $ticket->getId());
+        $ticket->setId(10);
+        $this->assertEquals(10, $ticket->getId());
+    }
+
     public function testToArray() {
         $ticket = $this->_buildTicket();
 
