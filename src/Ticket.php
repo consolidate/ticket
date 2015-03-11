@@ -7,10 +7,12 @@ use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddRole;
 use Consolidate\Ticket\Event\RemoveRole;
 use Consolidate\Ticket\Event\SetStatus;
+use Consolidate\Ticket\Event\SetChannel;
 
 use Consolidate\Ticket\Data\Role;
 use Consolidate\Ticket\Data\Participant;
 use Consolidate\Ticket\Data\Status;
+use Consolidate\Ticket\Data\Channel;
 
 use Illuminate\Support\Collection;
 use \Exception;
@@ -105,6 +107,11 @@ class Ticket
         $this->setDirty();
     }
 
+    public function getCreated()
+    {
+        return $this->getTimeline()->shift()->getCreated();
+    }
+
     /**
      * Change the status of the ticket as of now
      *
@@ -113,11 +120,6 @@ class Ticket
     public function setStatus(Status $status)
     {
         $this->addEvent(new SetStatus($this->getWorker(), $status));
-    }
-
-    public function getCreated()
-    {
-        return $this->getTimeline()->shift()->getCreated();
     }
 
     /**
@@ -129,12 +131,36 @@ class Ticket
     public function getStatus()
     {
         return $this->getWithCaching('status', function() {
-            return $this->getTimeline()->reduce(function($status, $event) {
-                if (get_class($event) == 'Consolidate\Ticket\Event\SetStatus') {
-                    $status = $event->getData();
-                }
-                return $status;
+            return $this->getEvents(['Consolidate\Ticket\Event\SetStatus'])->reduce(function($status, $event) {
+                return $event->getData();
             }, null);
+        });
+    }
+
+    /**
+     * Change which channel a ticket belongs in (who should be dealing with this)
+     *
+     * @param Channel $channel The new channel
+     */
+    public function setChannel(Channel $channel)
+    {
+        $this->addEvent(new SetChannel($this->getWorker(), $channel));
+    }
+
+    /**
+     * Return the channel of the ticket by picking the latest channel change from
+     * the timeline.
+     *
+     * @return Status
+     */
+    public function getChannel()
+    {
+        return $this->getWithCaching('channel', function() {
+            $channel = $this->getEvents(['Consolidate\Ticket\Event\SetChannel'])->reduce(function($channel, $event) {
+                return $event->getData();
+            }, null);
+
+            return !empty($channel) ? $channel : new Channel(Channel::UNKNOWN);
         });
     }
 

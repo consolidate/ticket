@@ -11,6 +11,7 @@ use Consolidate\Ticket\Data\Participant;
 use Consolidate\Ticket\Data\Role;
 use Consolidate\Ticket\Data\Comment;
 use Consolidate\Ticket\Data\Status;
+use Consolidate\Ticket\Data\Channel;
 
 use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddTag;
@@ -19,12 +20,15 @@ use Consolidate\Ticket\Event\AddRole;
 use Consolidate\Ticket\Event\RemoveRole;
 use Consolidate\Ticket\Event\AddComment;
 use Consolidate\Ticket\Event\SetStatus;
+use Consolidate\Ticket\Event\SetChannel;
+
 
 class TicketTest extends PHPUnit_Framework_TestCase
 {
     private function _buildTicket() {
         $ticket = new Ticket();
         $participant = new Participant('bob@bob.com');
+        $ticket->setWorker($participant);
         
         $time = strtotime('2015-02-23 21:11');
 
@@ -70,6 +74,15 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $ticket->setWorker($participant);
         $ticket->setStatus(new Status(Status::QUEUED));
         $this->assertEquals(Status::QUEUED, (string)$ticket->getStatus());
+    }
+
+    public function testGetChannel() {
+        $ticket = $this->_buildTicket();
+
+        $this->assertEquals(Channel::UNKNOWN, (string)$ticket->getChannel());
+
+        $ticket->setChannel(new Channel('Support'));
+        $this->assertEquals('Support', (string)$ticket->getChannel());
     }
 
     public function testItemAdding() {
@@ -164,6 +177,9 @@ class TicketTest extends PHPUnit_Framework_TestCase
 
     public function testToArray() {
         $ticket = $this->_buildTicket();
+        // Add the channel we left off in the basic build
+        $ticket->setChannel(new Channel('Support'));
+
 
         $ticket2 = Ticket::fromArray($ticket->toArray());
         $this->assertEquals($ticket->toArray(), $ticket2->toArray());
