@@ -98,7 +98,7 @@ class Ticket
     {
         $this->timeline->push($event);
 
-        // Set up some circle-referencing
+        // Set up some circular-referencing
         $event->setTicket($this);
         $event_name = 'ticket-' . str_replace(' ', '-', $event->getAction());
         $this->getEventManager()->dispatch($event_name, $event);
@@ -199,6 +199,9 @@ class Ticket
      */
     public function getWorker()
     {
+        if (empty($this->worker)) {
+            throw new Exception('You cannot perform an action on this ticket until a worker is assigned.');
+        }
         return $this->worker;
     }
 
@@ -231,7 +234,7 @@ class Ticket
     {
         $roles = $this->getRoles();
         if (empty($roles[Role::ASSIGNED])) {
-            throw new Exception('Ticket currently does not have an assigned worker');
+            return 'unassigned';
         }
         return current($roles[Role::ASSIGNED]);
     }
@@ -273,7 +276,7 @@ class Ticket
     public function getTags()
     {
         return $this->getWithCaching('tags', function() {
-            return $this->getData(['Consolidate\Ticket\Data\Tag'])->reduce(function($result, $event) {
+            return array_values($this->getData(['Consolidate\Ticket\Data\Tag'])->reduce(function($result, $event) {
                 switch (get_class($event)) {
                     case 'Consolidate\Ticket\Event\AddTag':
                         $result[$event->getTag()] = $event->getTag();
@@ -283,7 +286,7 @@ class Ticket
                         break;
                 }
                 return $result;
-            });
+            }));
         });
     }
 
@@ -333,9 +336,22 @@ class Ticket
      */
     public function toArray()
     {
+        // We want to flatten certain values for quicker searching from store
+        $participants = array_map(function ($item) { return $item->toArray(); }, $this->getParticipants());
+        $roles = [];
+        foreach ($this->getRoles() as $key => $role) {
+            $roles[$key] = array_map(function ($item) { return $item->toArray(); }, array_values($role));
+        }
+
         return [
-            'id'       => $this->id,
-            'timeline' => $this->getTimeline()->map(function($event) {
+            'id'           => $this->id,
+            'status'       => (string)$this->getStatus(),
+            'channel'      => (string)$this->getChannel(),
+            'assigned_to'  => (string)$this->getAssignedTo(),
+            'participants' => $participants,
+            'roles'        => $roles,
+            'tags'         => $this->getTags(),
+            'timeline'     => $this->getTimeline()->map(function($event) {
                 return $event->toArray();
             })->toArray()
         ];

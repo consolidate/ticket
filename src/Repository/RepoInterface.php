@@ -1,7 +1,7 @@
 <?php
 namespace Consolidate\Ticket\Repository;
 
-use Consolidate\Ticket;
+use Consolidate\Ticket\Ticket;
 
 interface RepoInterface
 {

@@ -7,7 +7,7 @@ use Consolidate\Ticket\Ticket;
 
 use \Exception;
 
-class Repository
+class Repository implements RepoInterface
 {
     protected $storage = null;
 
@@ -25,13 +25,28 @@ class Repository
         return $this->storage;
     }
 
-    public function load($id)
+    public function find($id, $findOrFail = false)
     {
-        return $this->getStorage()->load($id);
+        $storage = $this->getStorage();
+
+        try {
+            return $storage->load($id);
+        } catch (Exception $exception) {
+            if ($findOrFail) {
+                throw $exception;
+            }
+
+            return new Ticket();
+        }
     }
 
-    public function persist(Ticket $ticket)
+    public function save(Ticket $ticket)
     {
         return $this->getStorage()->persist($ticket);
+    }
+
+    public function delete(Ticket $ticket)
+    {
+        throw new Exception('Unsupported');
     }
 }

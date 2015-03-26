@@ -14,16 +14,16 @@ class RepositoryTest extends PHPUnit_Framework_TestCase
         $repository = new Repository();
         $repository->setStorage(new FakeStore());
         
-        $ticket = $repository->load(1);
+        $ticket = $repository->find(1);
         $this->assertEquals(1, $ticket->getId());
-        $this->assertTrue($repository->persist($ticket));
+        $this->assertTrue($repository->save($ticket));
     }
 
     public function testMissingStore() {
         $this->setExpectedException('Exception', 'No storage engine specified.');
 
         $repository = new Repository();
-        $repository->load(1);
+        $repository->find(1);
     }
 }
 

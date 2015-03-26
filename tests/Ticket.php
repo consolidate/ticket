@@ -57,6 +57,12 @@ class TicketTest extends PHPUnit_Framework_TestCase
         return $ticket;
     }
 
+    public function testAttemptWorkWithoutWorker() {
+        $ticket = new Ticket();
+        $this->setExpectedException('Exception', 'You cannot perform an action on this ticket until a worker is assigned.');
+        $ticket->setStatus(new Status(Status::CLOSED));
+    }
+
     public function testGetStatus() {
         $ticket = $this->_buildTicket();
 
@@ -112,10 +118,10 @@ class TicketTest extends PHPUnit_Framework_TestCase
     }
 
     public function testGetAssignedUnknown() {
-        $this->setExpectedException('Exception', 'Ticket currently does not have an assigned worker');
+        //$this->setExpectedException('Exception', 'Ticket currently does not have an assigned worker');
 
         $ticket = new Ticket();
-        $ticket->getAssignedTo();
+        $this->assertEquals('unassigned', $ticket->getAssignedTo());
     }
 
     public function testGetAssigned() {
@@ -179,7 +185,6 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $ticket = $this->_buildTicket();
         // Add the channel we left off in the basic build
         $ticket->setChannel(new Channel('Support'));
-
 
         $ticket2 = Ticket::fromArray($ticket->toArray());
         $this->assertEquals($ticket->toArray(), $ticket2->toArray());

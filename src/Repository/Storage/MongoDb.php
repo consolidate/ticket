@@ -2,6 +2,8 @@
 
 namespace Consolidate\Ticket\Repository\Storage;
 
+
+use Consolidate\Ticket\Repository\Storage\MongoDb\Filter;
 use Consolidate\Ticket\Ticket;
 use \MongoCollection;
 use \MongoId;
@@ -16,9 +18,21 @@ class MongoDb implements Store
         $this->adapter = $adapter;
     }
 
+    public function search(Filter $filter)
+    {
+        print_r($filter->toArray());
+        $cursor = $this->adapter->find($filter->toArray(), ['_id' => 1]);
+        $tickets = [];
+        foreach ($cursor as $item) {
+            $tickets[] = (string)$item['_id'];
+        }
+
+        return $tickets;
+    }
+
     public function load($id)
     {
-        $data = $this->adapter->findOne(array('_id' => new MongoId($id)));
+        $data = $this->adapter->findOne(['_id' => new MongoId($id)]);
         if (empty($data)) {
             throw new Exception('Invalid ID provided.');
         }

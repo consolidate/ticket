@@ -1,7 +1,7 @@
 <?php
 namespace Consolidate\Ticket\Repository\Ticket;
 
-use Consolidate\Ticket;
+use Consolidate\Ticket\Ticket;
 
 class TicketSqlRepository implements TicketRepoInterface
 {
