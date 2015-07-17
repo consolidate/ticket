@@ -1,0 +1,510 @@
+                                                                                                                                                                                                                                                               
+Delivered-To: redacted@redacted.com
+Received: by 10.182.142.138 with SMTP id rw10csp1210034obb;
+        Sun, 29 Mar 2015 19:06:45 -0700 (PDT)
+X-Received: by 10.68.248.39 with SMTP id yj7mr54719637pbc.58.1427681204520;
+        Sun, 29 Mar 2015 19:06:44 -0700 (PDT)
+Return-Path: <php-fig+bncBD4Z7QGMRUBRBMO74KUAKGQECUIZRDI@googlegroups.com>
+Received: from mail-pa0-x23c.google.com (mail-pa0-x23c.google.com. [2607:f8b0:400e:c03::23c])
+        by mx.google.com with ESMTPS id i9si12587209pbq.149.2015.03.29.19.06.42
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 29 Mar 2015 19:06:44 -0700 (PDT)
+Received-SPF: pass (google.com: domain of php-fig+bncBD4Z7QGMRUBRBMO74KUAKGQECUIZRDI@googlegroups.com designates 2607:f8b0:400e:c03::23c as permitted sender) client-ip=2607:f8b0:400e:c03::23c;
+Authentication-Results: mx.google.com;
+       spf=pass (google.com: domain of php-fig+bncBD4Z7QGMRUBRBMO74KUAKGQECUIZRDI@googlegroups.com designates 2607:f8b0:400e:c03::23c as permitted sender) smtp.mail=php-fig+bncBD4Z7QGMRUBRBMO74KUAKGQECUIZRDI@googlegroups.com;
+       dkim=pass header.i=@googlegroups.com;
+       dmarc=pass (p=NONE dis=NONE) header.from=googlegroups.com
+Received: by mail-pa0-x23c.google.com with SMTP id lf10sf11951218pab.1;
+        Sun, 29 Mar 2015 19:06:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlegroups.com; s=20120806;
+        h=mime-version:to:from:subject:message-id:date:content-type
+         :x-original-sender:reply-to:precedence:mailing-list:list-id
+         :list-post:list-help:list-archive:sender:list-subscribe
+         :list-unsubscribe;
+        bh=faQ2XbvY3vLIajmx7TvnhAoMZvMtCoTOcLBPCpRyTPI=;
+        b=kb83lkwUdCan4PEb/PsF3wZ6uT3XlOGkh8lzRXkB2Vv8PM5D8nhOIvaHxp8EAo1e5O
+         oCyM3IovY6wK0hJQ9D5pCI1XhC6wWvOQesiyN9Rw2CDQb+QionwL7VfK8aejSBstseK/
+         DQuJIq9QRkcysS9NMjsLUa8p5Yg2aB07+pJXc8HOEWr3DYaG/nTYBNvQWgBrnAZyEYbf
+         Ot7wUip/GfgMz3lgK3WneTGe29LRuLasCbCht5nzYNKkx3a+7WpRmV9sw4rPVUaA+UR9
+         sVY2uv5zZL/DXQyflb15nGd1pj7rLhL5YN0VG8Hsn6v8oot1TM9gMEIEWQ7Wc8scQfPo
+         ZZqw==
+X-Received: by 10.140.34.168 with SMTP id l37mr433618qgl.20.1427681202901;
+        Sun, 29 Mar 2015 19:06:42 -0700 (PDT)
+X-BeenThere: php-fig@googlegroups.com
+Received: by 10.140.33.130 with SMTP id j2ls2199570qgj.37.gmail; Sun, 29 Mar
+ 2015 19:06:41 -0700 (PDT)
+X-Received: by 10.236.110.38 with SMTP id t26mr34749283yhg.1.1427681201663;
+        Sun, 29 Mar 2015 19:06:41 -0700 (PDT)
+MIME-Version: 1.0
+To: Abridged recipients <php-fig@googlegroups.com>
+From: php-fig@googlegroups.com
+Subject: Abridged summary of php-fig@googlegroups.com - 7 updates in 2 topics
+Message-ID: <001a1134f196e09dbc051277ee41@google.com>
+Date: Mon, 30 Mar 2015 02:06:41 +0000
+Content-Type: multipart/alternative; boundary=0016367f94b4b30060474d22062
+X-Original-Sender: php-fig@googlegroups.com
+Reply-To: php-fig@googlegroups.com
+Precedence: list
+Mailing-list: list php-fig@googlegroups.com; contact php-fig+owners@googlegroups.com
+List-ID: <php-fig.googlegroups.com>
+X-Google-Group-Id: 106729312249
+List-Post: <http://groups.google.com/group/php-fig/post>, <mailto:php-fig@googlegroups.com>
+List-Help: <http://groups.google.com/support/>, <mailto:php-fig+help@googlegroups.com>
+List-Archive: <http://groups.google.com/group/php-fig
+Sender: php-fig@googlegroups.com
+List-Subscribe: <http://groups.google.com/group/php-fig/subscribe>, <mailto:php-fig+subscribe@googlegroups.com>
+List-Unsubscribe: <mailto:googlegroups-manage+106729312249+unsubscribe@googlegroups.com>,
+ <http://groups.google.com/group/php-fig/subscribe>
+
+--0016367f94b4b30060474d22062
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+Today's topic summary
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+
+Group: php-fig@googlegroups.com
+Url:=20
+  https://groups.google.com/forum/?utm_source=3Ddigest&utm_medium=3Demail#!=
+forum/php-fig/topics
+
+
+  - [Cache] Restoration of code and abuse of authority [2 Updates]
+    http://groups.google.com/group/php-fig/t/4cceb5074aecd93c
+  - [VOTE][RESULTS] Membership Vote: Jeremy Lindblom, Guzzle [5 Updates]
+    http://groups.google.com/group/php-fig/t/789c420b8d68e56a
+
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+Topic: [Cache] Restoration of code and abuse of authority
+Url: http://groups.google.com/group/php-fig/t/4cceb5074aecd93c
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+
+---------- 1 of 2 ----------
+From: Larry Garfield <larry@garfieldtech.com>
+Date: Mar 29 07:26PM -0500
+Url: http://groups.google.com/group/php-fig/msg/6cd3b807144d98fd
+
+On 16 March, I received an email from Paul Dragoonis that he had deleted=20
+the PSR-6 repository on FIG, claiming it was "never used and the idea=20
+was abandoned".
+
+This poses a number of problems.
+
+---------- 2 of 2 ----------
+From: Robert Hafner <tedivm@tedivm.com>
+Date: Mar 29 06:17PM -0700
+Url: http://groups.google.com/group/php-fig/msg/2bfa4d05e9da1f1a
+
+This email presents one take on a situation. There are a few immediate fact=
+s that I want to clear up.
+
+1. The spec is *not* in review. Larry=E2=80=99s email putting it in review =
+was done unilaterally and
+
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+Topic: [VOTE][RESULTS] Membership Vote: Jeremy Lindblom, Guzzle
+Url: http://groups.google.com/group/php-fig/t/789c420b8d68e56a
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D
+
+---------- 1 of 5 ----------
+From: Larry Garfield <larry@garfieldtech.com>
+Date: Mar 29 01:02AM -0500
+Url: http://groups.google.com/group/php-fig/msg/d64c041c76516457
+
+The membership vote has now closed.
+
+Eligible voters: 40
+Quorum: 14
+
+Voting in favor: 23
+
+Paul Jones, Aura
+Korvin Szanto, concrete5
+Leo Feyer, Contao
+Cal Evans, Community
+
+---------- 2 of 5 ----------
+From: Matteo Beccati <matteo@beccati.com>
+Date: Mar 29 10:31AM +0200
+Url: http://groups.google.com/group/php-fig/msg/76b0ec311d005362
+
+On 29/03/2015 08:02, Larry Garfield wrote:
+> I also noted that Horde is not on the home page yet.  Someone should fix
+> that.  I'd add it to the PR but...
+
+That could be my fault, as I didn't know
+
+---------- 3 of 5 ----------
+From: Josh Lockhart <joshlockhart@gmail.com>
+Date: Mar 29 10:29AM -0400
+Url: http://groups.google.com/group/php-fig/msg/77d6fc36324d3fd
+
+haha. I REALLY wanted Jeremy to make it in :D My ballot stuffing is
+courtesy of Google Groups marking my first vote as spam due to
+misconfigured SMTP and/or DKIM settings. That's been fixed.
+
+--=20
+
+---------- 4 of 5 ----------
+From: Jeremy Lindblom <jeremeamia@gmail.com>
+Date: Mar 29 08:33AM -0700
+Url: http://groups.google.com/group/php-fig/msg/452bc0b05900496a
+
+Thanks everyone!
+
+-- Jeremy Lindblom
+PHP Software Engineer, AWS
+
+
+
+---------- 5 of 5 ----------
+From: Michael Dowling <mtdowling@gmail.com>
+Date: Mar 29 10:01AM -0700
+Url: http://groups.google.com/group/php-fig/msg/2b704c604d4ce7e5
+
+Please withdraw the AWS SDK for PHP membership from the FIG.
+
+We will be represented through the Guzzle vote.
+
+Thanks,
+Michael
+
+
+
+
+
+
+
+--
+You received this digest because you're subscribed to updates for this grou=
+p. You can change your settings on the group membership page:=20
+  https://groups.google.com/forum/?utm_source=3Ddigest&utm_medium=3Demail#!=
+forum/php-fig/join
+.
+To unsubscribe from this group and stop receiving emails from it send an em=
+ail to php-fig+unsubscribe@googlegroups.com.
+
+
+--0016367f94b4b30060474d22062
+Content-Type: text/html; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+
+<div style=3D"border:1px solid #d3d3d3;max-width:850px;font-family:Arial,sa=
+ns-serif;color:#000000;">
+  <div style=3D"background-color:#f5f5f5;padding:10px 20px">
+    <table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%">
+      <tbody>
+        <tr>
+          <td style=3D"width:70%">
+            <span style=3D"font:18px/20px arial;color:#333333">
+              <a href=3D"
+  https://groups.google.com/forum/?utm_source=3Ddigest&utm_medium=3Demail#!=
+forum/php-fig/topics
+" style=3D"text-decoration:none; color:#333333">
+              php-fig@googlegroups.com</a>
+            </span>
+          </td>
+          <td style=3D"text-align:right;width:30%">
+            <span style=3D"font:20px/24px arial"><a style=3D"color:#dd4b39;=
+ text-decoration:none;" href=3D"https://groups.google.com/forum/?utm_source=
+=3Ddigest&utm_medium=3Demail/#!overview" target=3D"_blank">Google Groups</a=
+></span>
+          </td>
+          <td style=3D"width:32px;">
+            <a href=3D"https://groups.google.com/forum/?utm_source=3Ddigest=
+&utm_medium=3Demail/#!overview" target=3D"_blank"><img style=3D"border:0;ve=
+rtical-align:middle"
+                src=3D"http://www.google.com/images/icons/product/groups-32=
+.png"></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style=3D"padding:20px; background-color: #f5f5f5;">
+
+
+<div style=3D"font-family: arial; color: #222222; padding: 0px">
+  <a name=3D"digest_top" style=3D"font-size:21px;">
+ =20
+    Today's topic summary
+ =20
+ =20
+  </a><br>
+  <span style=3D"font-size:11px">
+    <a style=3D"color:#1155cc;text-decoration:none" href=3D"
+  https://groups.google.com/forum/?utm_source=3Ddigest&utm_medium=3Demail#!=
+forum/php-fig/topics
+">View all topics</a>
+  </span>
+</div>
+<div style=3D"font: 13px/18px arial; color:#222222; padding: 0px; margin-bo=
+ttom:30px">
+  <ul style=3D"margin-left:3px; padding-left:0px">
+ =20
+    <li>
+      <a style=3D"color:#1155cc;text-decoration:none" href=3D"#group_thread=
+_0">
+      [Cache] Restoration of code and abuse of authority</a> -
+      <span style=3D"color:#777777">2 Updates</span>
+    </li>
+ =20
+    <li>
+      <a style=3D"color:#1155cc;text-decoration:none" href=3D"#group_thread=
+_1">
+      [VOTE][RESULTS] Membership Vote: Jeremy Lindblom, Guzzle</a> -
+      <span style=3D"color:#777777">5 Updates</span>
+    </li>
+ =20
+  </ul>
+</div>
+
+
+
+ =20
+  <a name=3D"group_thread_0"></a>
+  <div style=3D"display:inline-block; font-family: arial; padding: 4px 0 5p=
+x 0px;">
+ =20
+    <a target=3D"_blank" href=3D"http://groups.google.com/group/php-fig/t/4=
+cceb5074aecd93c?utm_source=3Ddigest&utm_medium=3Demail" style=3D"font-size:=
+21px; color:#1155CC; text-decoration:none">
+      [Cache] Restoration of code and abuse of authority
+    </a>
+ =20
+  </div>
+
+  <table style=3D"border-collapse: collapse; width: 100%">
+   =20
+    <tr><td style=3D"background-color: #FFFFFF; color:#2E2E2E; font-family:=
+ arial; padding:10px 15px; border:1px solid #d3d3d3;">
+      <span style=3D"color:#B1B0B0; font-size: 15px;">
+        Larry Garfield &lt;larry@garfieldtech.com&gt;: Mar 29 07:26PM -0500
+      </span>
+      <br /><br />
+      On 16 March, I received an email from Paul Dragoonis that he had dele=
+ted <br />
+the PSR-6 repository on FIG, claiming it was &quot;never used and the idea =
+<br />
+was abandoned&quot;.<br />
+&nbsp;<br />
+This poses a number of problems.
+     =20
+        <span style=3D"font-size:11px;"><a style=3D"color:#1155cc;text-deco=
+ration:none" href=3D"http://groups.google.com/group/php-fig/msg/6cd3b807144=
+d98fd?utm_source=3Ddigest&utm_medium=3Demail">...more</a></span>
+        <br />
+     =20
+    </td></tr>
+   =20
+    <tr><td style=3D"background-color: #FFFFFF; color:#2E2E2E; font-family:=
+ arial; padding:10px 15px; border:1px solid #d3d3d3;">
+      <span style=3D"color:#B1B0B0; font-size: 15px;">
+        Robert Hafner &lt;tedivm@tedivm.com&gt;: Mar 29 06:17PM -0700
+      </span>
+      <br /><br />
+      This email presents one take on a situation. There are a few immediat=
+e facts that I want to clear up.<br />
+&nbsp;<br />
+1. The spec is *not* in review. Larry=E2=80=99s email putting it in review =
+was done unilaterally and
+     =20
+        <span style=3D"font-size:11px;"><a style=3D"color:#1155cc;text-deco=
+ration:none" href=3D"http://groups.google.com/group/php-fig/msg/2bfa4d05e9d=
+a1f1a?utm_source=3Ddigest&utm_medium=3Demail">...more</a></span>
+        <br />
+     =20
+    </td></tr>
+   =20
+  </table>
+  <div style=3D"align:right; font-size:11px; margin-bottom: 40px; margin-to=
+p:5px;">
+    <a style=3D"color:#1155cc;text-decoration:none" href=3D"#digest_top">Ba=
+ck to top</a>
+  </div>
+
+
+ =20
+  <a name=3D"group_thread_1"></a>
+  <div style=3D"display:inline-block; font-family: arial; padding: 4px 0 5p=
+x 0px;">
+ =20
+    <a target=3D"_blank" href=3D"http://groups.google.com/group/php-fig/t/7=
+89c420b8d68e56a?utm_source=3Ddigest&utm_medium=3Demail" style=3D"font-size:=
+21px; color:#1155CC; text-decoration:none">
+      [VOTE][RESULTS] Membership Vote: Jeremy Lindblom, Guzzle
+    </a>
+ =20
+  </div>
+
+  <table style=3D"border-collapse: collapse; width: 100%">
+   =20
+    <tr><td style=3D"background-color: #FFFFFF; color:#2E2E2E; font-family:=
+ arial; padding:10px 15px; border:1px solid #d3d3d3;">
+      <span style=3D"color:#B1B0B0; font-size: 15px;">
+        Larry Garfield &lt;larry@garfieldtech.com&gt;: Mar 29 01:02AM -0500
+      </span>
+      <br /><br />
+      The membership vote has now closed.<br />
+&nbsp;<br />
+Eligible voters: 40<br />
+Quorum: 14<br />
+&nbsp;<br />
+Voting in favor: 23<br />
+&nbsp;<br />
+Paul Jones, Aura<br />
+Korvin Szanto, concrete5<br />
+Leo Feyer, Contao<br />
+Cal Evans, Community<br />
+
+     =20
+        <span style=3D"font-size:11px;"><a style=3D"color:#1155cc;text-deco=
+ration:none" href=3D"http://groups.google.com/group/php-fig/msg/d64c041c765=
+16457?utm_source=3Ddigest&utm_medium=3Demail">...more</a></span>
+        <br />
+     =20
+    </td></tr>
+   =20
+    <tr><td style=3D"background-color: #FFFFFF; color:#2E2E2E; font-family:=
+ arial; padding:10px 15px; border:1px solid #d3d3d3;">
+      <span style=3D"color:#B1B0B0; font-size: 15px;">
+        Matteo Beccati &lt;matteo@beccati.com&gt;: Mar 29 10:31AM +0200
+      </span>
+      <br /><br />
+      On 29/03/2015 08:02, Larry Garfield wrote:<br />
+&gt; I also noted that Horde is not on the home page yet.  Someone should f=
+ix<br />
+&gt; that.  I&#39;d add it to the PR but...<br />
+&nbsp;<br />
+That could be my fault, as I didn&#39;t know
+     =20
+        <span style=3D"font-size:11px;"><a style=3D"color:#1155cc;text-deco=
+ration:none" href=3D"http://groups.google.com/group/php-fig/msg/76b0ec311d0=
+05362?utm_source=3Ddigest&utm_medium=3Demail">...more</a></span>
+        <br />
+     =20
+    </td></tr>
+   =20
+    <tr><td style=3D"background-color: #FFFFFF; color:#2E2E2E; font-family:=
+ arial; padding:10px 15px; border:1px solid #d3d3d3;">
+      <span style=3D"color:#B1B0B0; font-size: 15px;">
+        Josh Lockhart &lt;joshlockhart@gmail.com&gt;: Mar 29 10:29AM -0400
+      </span>
+      <br /><br />
+      haha. I REALLY wanted Jeremy to make it in :D My ballot stuffing is<b=
+r />
+courtesy of Google Groups marking my first vote as spam due to<br />
+misconfigured SMTP and/or DKIM settings. That&#39;s been fixed.<br />
+&nbsp;<br />
+--=20
+     =20
+        <span style=3D"font-size:11px;"><a style=3D"color:#1155cc;text-deco=
+ration:none" href=3D"http://groups.google.com/group/php-fig/msg/77d6fc36324=
+d3fd?utm_source=3Ddigest&utm_medium=3Demail">...more</a></span>
+        <br />
+     =20
+    </td></tr>
+   =20
+    <tr><td style=3D"background-color: #FFFFFF; color:#2E2E2E; font-family:=
+ arial; padding:10px 15px; border:1px solid #d3d3d3;">
+      <span style=3D"color:#B1B0B0; font-size: 15px;">
+        Jeremy Lindblom &lt;jeremeamia@gmail.com&gt;: Mar 29 08:33AM -0700
+      </span>
+      <br /><br />
+      Thanks everyone!<br />
+&nbsp;<br />
+-- Jeremy Lindblom<br />
+PHP Software Engineer, AWS<br />
+&nbsp;<br />
+
+     =20
+        <span style=3D"font-size:11px;"><a style=3D"color:#1155cc;text-deco=
+ration:none" href=3D"http://groups.google.com/group/php-fig/msg/452bc0b0590=
+0496a?utm_source=3Ddigest&utm_medium=3Demail">...more</a></span>
+        <br />
+     =20
+    </td></tr>
+   =20
+    <tr><td style=3D"background-color: #FFFFFF; color:#2E2E2E; font-family:=
+ arial; padding:10px 15px; border:1px solid #d3d3d3;">
+      <span style=3D"color:#B1B0B0; font-size: 15px;">
+        Michael Dowling &lt;mtdowling@gmail.com&gt;: Mar 29 10:01AM -0700
+      </span>
+      <br /><br />
+      Please withdraw the AWS SDK for PHP membership from the FIG.<br />
+&nbsp;<br />
+We will be represented through the Guzzle vote.<br />
+&nbsp;<br />
+Thanks,<br />
+Michael<br />
+&nbsp;<br />
+
+     =20
+        <span style=3D"font-size:11px;"><a style=3D"color:#1155cc;text-deco=
+ration:none" href=3D"http://groups.google.com/group/php-fig/msg/2b704c604d4=
+ce7e5?utm_source=3Ddigest&utm_medium=3Demail">...more</a></span>
+        <br />
+     =20
+    </td></tr>
+   =20
+  </table>
+  <div style=3D"align:right; font-size:11px; margin-bottom: 40px; margin-to=
+p:5px;">
+    <a style=3D"color:#1155cc;text-decoration:none" href=3D"#digest_top">Ba=
+ck to top</a>
+  </div>
+
+
+
+
+  </div>
+  <div style=3D"background-color: #f5f5f5;padding: 5px 20px;">
+  <table cellpadding=3D"0" cellspacing=3D"0" style=3D"width:100%">
+  <tbody><tr>
+    <td style=3D"padding-top:4px;font-family:arial,sans-serif;color:#636363=
+;font-size:11px">
+     =20
+      You received this digest because you're subscribed to updates for thi=
+s group. You can change your settings on the <a href=3D"
+  https://groups.google.com/forum/?utm_source=3Ddigest&utm_medium=3Demail#!=
+forum/php-fig/join
+" style=3D"color:#1155cc;text-decoration:none">group membership page</a>.<b=
+r/>
+      To unsubscribe from this group and stop receiving emails from it send=
+ an email to <a href=3D"mailto:php-fig+unsubscribe@googlegroups.com">php-fi=
+g+unsubscribe@googlegroups.com</a>.
+    </td>
+  </tr></tbody>
+  </table>
+  </div>
+</div>
+
+
+--0016367f94b4b30060474d22062--
+
+
