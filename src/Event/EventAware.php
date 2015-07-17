@@ -28,12 +28,9 @@ trait EventAware
 
     /**
      * Set the event manager object
-     *
-     * @return mixed
      */
     public function setEventManager(EventDispatcherInterface $eventManager)
     {
         $this->eventManager = $eventManager;
-        return $this;
     }
 }

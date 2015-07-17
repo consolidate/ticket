@@ -11,6 +11,8 @@
     "require": {
         "php": ">=5.4",
         "illuminate/support": "4.2.*@stable",
+        "black/email": "~1.0",
+        "zetacomponents/mail": "~1.8",
         "symfony/event-dispatcher": "~2.6"
     },
     "require-dev": {

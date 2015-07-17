@@ -58,6 +58,6 @@ class Participant implements Data
 
     public function __toString()
     {
-        return $this->label;
+        return $this->getLabel();
     }
 }

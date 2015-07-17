@@ -100,6 +100,7 @@ class Ticket
 
         // Set up some circular-referencing
         $event->setTicket($this);
+        // Fire off our events
         $event_name = 'ticket-' . str_replace(' ', '-', $event->getAction());
         $this->getEventManager()->dispatch($event_name, $event);
         $this->getEventManager()->dispatch('ticket-add-event', $event);
@@ -337,10 +338,21 @@ class Ticket
     public function toArray()
     {
         // We want to flatten certain values for quicker searching from store
-        $participants = array_map(function ($item) { return $item->toArray(); }, $this->getParticipants());
+        $participants = array_map(
+            function ($item) {
+                return $item->toArray();
+            },
+            $this->getParticipants()
+        );
+  
         $roles = [];
         foreach ($this->getRoles() as $key => $role) {
-            $roles[$key] = array_map(function ($item) { return $item->toArray(); }, array_values($role));
+            $roles[$key] = array_map(
+                function ($item) {
+                    return $item->toArray();
+                },
+                array_values($role)
+            );
         }
 
         return [

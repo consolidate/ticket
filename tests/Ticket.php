@@ -12,6 +12,7 @@ use Consolidate\Ticket\Data\Role;
 use Consolidate\Ticket\Data\Comment;
 use Consolidate\Ticket\Data\Status;
 use Consolidate\Ticket\Data\Channel;
+use Consolidate\Ticket\Data\Email;
 
 use Consolidate\Ticket\Event\TicketEvent;
 use Consolidate\Ticket\Event\AddTag;
@@ -21,6 +22,7 @@ use Consolidate\Ticket\Event\RemoveRole;
 use Consolidate\Ticket\Event\AddComment;
 use Consolidate\Ticket\Event\SetStatus;
 use Consolidate\Ticket\Event\SetChannel;
+use Consolidate\Ticket\Event\AddEmail;
 
 
 class TicketTest extends PHPUnit_Framework_TestCase
@@ -53,6 +55,9 @@ class TicketTest extends PHPUnit_Framework_TestCase
 
         $comment = new AddComment($participant, new Comment('Long comment'), $time + 180);
         $ticket->addEvent($comment);
+
+        $email = new Email('', $participant2, $participant);
+        $ticket->addEvent(new AddEmail($participant, $email, $time + 181));
 
         return $ticket;
     }
@@ -97,7 +102,7 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertCount(1, $ticket->getTags());
 
         $timeline = $ticket->getTimeline();
-        $this->assertCount(7, $timeline);
+        $this->assertCount(8, $timeline);
         $this->assertEquals('Moo2', $timeline[0]->getTag());
         $this->assertEquals('Moo2', $timeline[1]->getTag());
         $this->assertEquals('Moo', $timeline[2]->getTag());
