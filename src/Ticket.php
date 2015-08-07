@@ -14,7 +14,6 @@ use Consolidate\Ticket\Data\Participant;
 use Consolidate\Ticket\Data\Status;
 use Consolidate\Ticket\Data\Channel;
 
-use Illuminate\Support\Collection;
 use \Exception;
 
 class Ticket
@@ -49,7 +48,7 @@ class Ticket
 
     public function __construct($id = 0)
     {
-        $this->timeline = new Collection();
+        $this->timeline = new Timeline();
         $this->setDirty();
         $this->id = $id;
     }
@@ -248,22 +247,7 @@ class Ticket
     public function getRoles()
     {
         return $this->getWithCaching('roles', function() {
-            return $this->getTimeline()->reduce(function($role, $event) {
-                $role[Role::WORKER][(string)$event->getWorker()] = $event->getWorker();
-                $data = $event->getData();
-                switch (get_class($event)) {
-                    case 'Consolidate\Ticket\Event\AddRole':
-                        $role[$data->getRole()][(string)$data->getParticipant()] = $data->getParticipant();
-                        break;
-                    case 'Consolidate\Ticket\Event\RemoveRole':
-                        unset($role[$data->getRole()][(string)$data->getParticipant()]);
-                        if (empty($role[$data->getRole()])) {
-                            unset($role[$data->getRole()]);
-                        }
-                        break;
-                }
-                return $role;
-            }, []);
+            return $this->timeline->getRoles();
         });
     }
 
@@ -277,17 +261,7 @@ class Ticket
     public function getTags()
     {
         return $this->getWithCaching('tags', function() {
-            return array_values($this->getData(['Consolidate\Ticket\Data\Tag'])->reduce(function($result, $event) {
-                switch (get_class($event)) {
-                    case 'Consolidate\Ticket\Event\AddTag':
-                        $result[$event->getTag()] = $event->getTag();
-                        break;
-                    case 'Consolidate\Ticket\Event\RemoveTag':
-                        unset($result[$event->getTag()]);
-                        break;
-                }
-                return $result;
-            }));
+            return $this->timeline->getTags();
         });
     }
 
@@ -298,9 +272,7 @@ class Ticket
      */
     public function getTimeline()
     {
-        return $this->timeline->sortBy(function($event) {
-            return $event->getCreated();
-        })->values();
+        return $this->timeline->compile();
     }
 
     /**
@@ -311,9 +283,7 @@ class Ticket
      */
     public function getEvents(array $eventTypes)
     {
-        return $this->getTimeline()->filter(function($event) use ($eventTypes) {
-            return in_array(get_class($event), $eventTypes);
-        })->values();
+        return $this->timeline->getEvents($eventTypes);
     }
 
     /**
@@ -324,9 +294,7 @@ class Ticket
      */
     public function getData(array $dataTypes)
     {
-        return $this->getTimeline()->filter(function($event) use ($dataTypes) {
-            return in_array(get_class($event->getData()), $dataTypes);
-        })->values();
+        return $this->timeline->getData($dataTypes);
     }
 
     /**
@@ -363,9 +331,7 @@ class Ticket
             'participants' => $participants,
             'roles'        => $roles,
             'tags'         => $this->getTags(),
-            'timeline'     => $this->getTimeline()->map(function($event) {
-                return $event->toArray();
-            })->toArray()
+            'timeline'     => $this->timeline->toArray()
         ];
     }
 
