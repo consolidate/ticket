@@ -9,8 +9,36 @@ use \Exception;
  */
 trait Resolvable
 {
+    /**
+     * The store this resolvable class should use to resolve
+     * @var Consolidate\Ticket\Store
+     */
     protected $store;
+
+    /**
+     * Has the resolver been called?
+     * @var boolean
+     */
     protected $is_resolved = false;
+
+    /**
+     * The unique identifier of the resolved entry
+     * @var integer
+     */
+    protected $id;
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function getId()
+    {
+        if (empty($this->id)) {
+            throw new LogicException('No valid identification found for this participant.');
+        }
+        return $this->id;
+    }
 
     public function setStore(Store $store)
     {
@@ -27,6 +55,7 @@ trait Resolvable
 
     public function resolve()
     {
+        $this->setId(0);
         return $this->store->resolve($this);
     }
 

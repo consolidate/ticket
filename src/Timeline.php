@@ -98,6 +98,11 @@ class Timeline extends Collection {
         }, []));
     }
 
+    /**
+     * Overwrite the parent's toArray function
+     *
+     * @return array
+     */
     public function toArray() {
         $result = [];
         foreach ($this->compile() as $event) {

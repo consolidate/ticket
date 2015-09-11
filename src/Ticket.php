@@ -107,9 +107,24 @@ class Ticket
         $this->setDirty();
     }
 
+    /**
+     * Get the time of the first event on this ticket
+     *
+     * @return int Timestamp of when this ticket was created
+     */
     public function getCreated()
     {
         return $this->getTimeline()->shift()->getCreated();
+    }
+
+    /**
+     * The time of the last event on this ticket
+     *
+     * @return int Timestamp of when this ticket was last updated
+     */
+    public function getLastUpdated()
+    {
+        return $this->getTimeline()->pop()->getCreated();
     }
 
     /**

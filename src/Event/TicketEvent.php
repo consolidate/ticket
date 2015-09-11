@@ -7,6 +7,7 @@ use Consolidate\Ticket\Data\Data;
 use Consolidate\Ticket\Data\Participant;
 
 use Symfony\Component\EventDispatcher\Event;
+use \LogicException;
 
 abstract class TicketEvent extends Event
 {
@@ -25,7 +26,15 @@ abstract class TicketEvent extends Event
     {
         $this->worker = $worker;
         $this->data = $data;
-        $this->created = $created ? $created : time();
+        if (!empty($created)) {
+            if (!is_int($created)) {
+                throw new LogicException("Created parameter expects a timestamp");
+            }
+
+            $this->created = $created;
+        } else {
+            $this->created = time();
+        }
     }
 
     public function getCreated()
