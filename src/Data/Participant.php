@@ -9,8 +9,6 @@ namespace Consolidate\Ticket\Data;
  */
 class Participant implements Data
 {
-    use Resolvable;
-
     protected $label;
     protected $param = array();
 
