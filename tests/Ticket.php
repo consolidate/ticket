@@ -87,6 +87,12 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Status::QUEUED, (string)$ticket->getStatus());
     }
 
+    public function testGetLastUpdated() {
+        $ticket = $this->_buildTicket();
+
+        $this->assertEquals(1424722441, $ticket->getLastUpdated());
+    }
+
     public function testGetChannel() {
         $ticket = $this->_buildTicket();
 
