@@ -56,7 +56,7 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $comment = new AddComment($participant, new Comment('Long comment'), $time + 180);
         $ticket->addEvent($comment);
 
-        $email = new Email('', $participant2, $participant);
+        $email = new Email('email', $participant2, $participant);
         $ticket->addEvent(new AddEmail($participant, $email, $time + 181));
 
         return $ticket;
@@ -172,6 +172,7 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('bob@bob.com added role observer on mike@mike.com @ 2015-02-23 21:12', (string)$timeline[4]);
         $this->assertEquals('bob@bob.com removed role observer on mike@mike.com @ 2015-02-23 21:13', (string)$timeline[5]);
         $this->assertEquals('bob@bob.com added comment Long comment @ 2015-02-23 21:14', (string)$timeline[6]);
+        $this->assertEquals('bob@bob.com added email email @ 2015-02-23 21:14', (string)$timeline[7]);
     }
 
     public function testGetCreated() {

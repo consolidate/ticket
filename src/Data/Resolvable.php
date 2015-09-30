@@ -2,6 +2,7 @@
 
 namespace Consolidate\Ticket\Data;
 
+use \LogicException;
 use \Exception;
 
 /**

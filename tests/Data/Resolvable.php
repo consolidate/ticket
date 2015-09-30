@@ -18,7 +18,18 @@ class ResolvableTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($participant->isResolved());
         $participant->resolve();
         $this->assertEquals("Bob McBobby", (string)$participant);
+        $this->assertEquals(1, $participant->getId());
         $this->assertTrue($participant->isResolved());
+    }
+
+    public function testResolvableFailed() {
+        $participant = new Participant('bob@bob.com');
+        $participant->setStore(new ParticipantStore());
+
+        $this->assertEquals("bob@bob.com", (string)$participant);
+        $this->assertFalse($participant->isResolved());
+        $this->setExpectedException('LogicException', 'No valid identification found for this participant.');
+        $participant->getId();
     }
 
     public function testResolvableNotSupported() {
@@ -40,6 +51,7 @@ class ParticipantStore implements Store {
             $data->set("email", $data->getLabel());
             $data->set("name", "Bob McBobby");
             $data->setLabel("Bob McBobby");
+            $data->setId(1);
             $data->setResolved(true);
         }
     }
